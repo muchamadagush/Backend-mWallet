@@ -87,34 +87,35 @@ const register = async (req, res, next) => {
 //   }
 // };
 
-// const activation = (req, res, next) => {
-//   const token = req.params.token;
-//   if (!token) {
-//     const error = new Error("server need token");
-//     error.code = 401;
-//     return next(error);
-//   }
-//   jwt.verify(token, process.env.SECRET_KEY, function (err, decoded) {
-//     if (err) {
-//       helpers.response(res, "Activation failed", null, 401);
-//     }
-//     const email = decoded.email;
-//     const role = decoded.role;
-//     userModels
-//       .activationUser(email)
-//       .then(() => {
-//         // alert(`Activation Sucessful`)
-//         res.redirect(`${process.env.FRONT_URL}/login/${role}`);
-//       })
+const activation = (req, res, next) => {
+  const token = req.params.token;
+  if (!token) {
+    const error = new Error("server need token");
+    error.code = 401;
+    return next(error);
+  }
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, decoded) {
+    if (err) {
+      helpers.response(res, "Activation failed", null, 401);
+    }
+    const email = decoded.email;
+    userModels
+      .activationUser(email)
+      .then(() => {
+        // alert(`Activation Sucessful`)
+        console.log("Sucessful");
+           helpers.response(res, "Success activation", email, 200);
+        // res.redirect(`${process.env.FRONT_URL}/v1/login/`);
+      })
 
-//       .catch((error) => {
-//         helpers.response(res, "failed change status", null, 401);
-//       });
-//   });
-// };
+      .catch((error) => {
+        helpers.response(res, "failed change status", null, 401);
+      });
+  });
+};
 
 module.exports = {
   register,
 //   login,
-//   activation,
+  activation,
 };

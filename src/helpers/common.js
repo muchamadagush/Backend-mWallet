@@ -75,7 +75,7 @@ const sendEmail = (toEmail, toName, token) => {
         </h2>
         <h1> One Step Closer To Be Part of Blanja Fashion Culture!
         </h1>
-        <h2> just <a href=${process.env.BASE_URL}/activation/${token}> Click Here! </a>for activating your account</h2>
+        <h2> just <a href=${process.env.BASE_URL}/v1/activation/${token}> Click Here! </a>for activating your account</h2>
     </div>
 </body>
 
