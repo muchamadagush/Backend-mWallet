@@ -120,9 +120,22 @@ const login = async (req, res, next) => {
   }
 };
 
+const setPin =  (req, res, next) => {
+  const { id, pin } = req.body;
+  userModels
+    .setPinUser(id,pin)
+    .then(() => {
+      helpers.response(res, "Success set pin", id, 200);
+    })
 
+    .catch((error) => {
+      helpers.response(res, "failed set pin", null, 401);
+    });
+
+ 
+};
 module.exports = {
   register,
   activation,
- login
+ login,setPin
 };
