@@ -6,6 +6,8 @@ router
   .post("/register", userController.register)
   .post("/login", userController.login)
   .get("/activation/:token", userController.activation)
-   .post("/setpin", userController.setPin);
+  .post("/setpin", userController.setPin)
+  .post("/forgotpassword", userController.forgotPassword)
+  .post("/resetpassword/:token", userController.resetPassword);
 
 module.exports = router;

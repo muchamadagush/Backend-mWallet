@@ -43,7 +43,7 @@ const register = async (req, res, next) => {
             { expiresIn: "2h" },
             function (err, token) {
             //   console.log(token);
-              common.sendEmail(data.email, data.username, token);
+              common.sendEmailActivation(data.email, data.username, token);
             }
           );
           helpers.response(res, "Success register", data, 200);
@@ -131,11 +131,63 @@ const setPin =  (req, res, next) => {
     .catch((error) => {
       helpers.response(res, "failed set pin", null, 401);
     });
+};
 
- 
+const forgotPassword =  (req, res, next) => {
+  const  email = req.body;
+   userModels
+     .findUser(email)
+     .then((result) => {
+         const user = result[0];
+       helpers.response(res, "Success find user", user, 200);
+         jwt.sign(
+           { username: user.username, email: user.email },
+           process.env.ACCESS_TOKEN_SECRET,
+           { expiresIn: "2h" },
+           function (err, token) {
+             //   console.log(token);
+             common.sendEmailResetPassword(user.email, user.username, token);
+           }
+         );
+         helpers.response(res, "Success token", data, 200);
+     })
+     .catch((error) => {
+       helpers.response(res, "failed find user", null, 401);
+     });
+}
+
+const resetPassword = (req, res, next) => {
+  const token = req.params.token;
+  const newPassword = req.body
+  if (!token) {
+    const error = new Error("server need token");
+    error.code = 401;
+    return next(error);
+  }
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, decoded) {
+    if (err) {
+      helpers.response(res, "Access denied", null, 401);
+    }
+    const email = decoded.email;
+    userModels
+      .ResetPasswordUser(email, newPassword)
+      .then(() => {
+        // alert(`Activation Sucessful`)
+        console.log("Sucessful");
+        helpers.response(res, "Success set new password", email, 200);
+        // res.redirect(`${process.env.FRONT_URL}/v1/login/`);
+      })
+
+      .catch((error) => {
+        helpers.response(res, "failed set new password", null, 401);
+      });
+  });
 };
 module.exports = {
   register,
   activation,
- login,setPin
+  login,
+  setPin,
+  forgotPassword,
+  resetPassword,
 };

@@ -56,6 +56,21 @@ const setPinUser = (id,pin) => {
     );
   });
 };
+const ResetPassword = (email,newPassword) => {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `UPDATE users SET password = "${newPassword}" where email = "${email}"`,
+
+      (error, result) => {
+        if (!error) {
+          resolve(result);
+        } else {
+          reject(error);
+        }
+      }
+    );
+  });
+};
 
 module.exports = {
   insertUser,
