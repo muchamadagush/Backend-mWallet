@@ -42,7 +42,6 @@ const register = async (req, res, next) => {
             process.env.ACCESS_TOKEN_SECRET,
             { expiresIn: "2h" },
             function (err, token) {
-            //   console.log(token);
               common.sendEmailActivation(data.email, data.username, token);
             }
           );
@@ -72,7 +71,6 @@ const activation = (req, res, next) => {
     userModels
       .activationUser(email)
       .then(() => {
-        // alert(`Activation Sucessful`)
         console.log("Sucessful");
         helpers.response(res, "Success activation", email, 200);
         // res.redirect(`${process.env.FRONT_URL}/v1/login/`);
@@ -107,7 +105,6 @@ const login = async (req, res, next) => {
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: "24h" },
         function (err, token) {
-        //   console.log(token);
           console.log(process.env.ACCESS_TOKEN_SECRET);
           delete user.password;
           user.token = token;
@@ -145,7 +142,6 @@ const forgotPassword =  (req, res, next) => {
            process.env.ACCESS_TOKEN_SECRET,
            { expiresIn: "2h" },
            function (err, token) {
-             //   console.log(token);
              common.sendEmailResetPassword(user.email, user.username, token);
            }
          );
@@ -170,10 +166,8 @@ const resetPassword = (req, res, next) => {
     }
     const email = decoded.email;
     userModels
-      .ResetPasswordUser(email, newPassword)
+      .resetPassword(email, newPassword)
       .then(() => {
-        // alert(`Activation Sucessful`)
-        console.log("Sucessful");
         helpers.response(res, "Success set new password", email, 200);
         // res.redirect(`${process.env.FRONT_URL}/v1/login/`);
       })

@@ -10,13 +10,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use('/v1', router);
 
-app.use((err, req, res, next) => {
-  // console.error(err);
-  res.status(err.status || 500).json({
-    message: err.message || "internal server Error",
-  });
-});
-
 app.listen(process.env.PORT, () => {
   console.log(`Server started on ${process.env.PORT}`);
 });

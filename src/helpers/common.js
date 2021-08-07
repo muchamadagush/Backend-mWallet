@@ -176,7 +176,7 @@ const sendEmailResetPassword = (toEmail, toName, token) => {
     })
     .catch((error) => {
       console.log(error);
-      //   helpers.response(res, "Failed send email data", null, 404);
+        // helpers.response(res, "Failed send email data", null, 404);
     });
 };
 

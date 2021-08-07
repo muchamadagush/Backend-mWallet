@@ -56,7 +56,7 @@ const setPinUser = (id,pin) => {
     );
   });
 };
-const ResetPassword = (email,newPassword) => {
+const resetPassword = (email,newPassword) => {
   return new Promise((resolve, reject) => {
     connection.query(
       `UPDATE users SET password = "${newPassword}" where email = "${email}"`,
@@ -77,4 +77,5 @@ module.exports = {
   findUser,
   activationUser,
   setPinUser,
+  resetPassword,
 };
