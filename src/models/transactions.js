@@ -10,17 +10,6 @@ const history = (userId) => new Promise((resolve, reject) => {
   });
 });
 
-const transaction = (data) => new Promise((resolve, reject) => {
-  conn.query(`INSERT INTO transactions SET ?`, data, (error, result) => {
-    if (!error) {
-      resolve(result)
-    } else {
-      reject(error)
-    }
-  })
-})
-
 module.exports = {
-  history,
-  transaction
+  history
 };
