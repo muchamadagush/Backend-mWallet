@@ -1,4 +1,4 @@
-const transactionModels = require("../models/products");
+const transactionModels = require("../models/transactions");
 const userModels = require("../models/users")
 const { v4: uuid } = require("uuid");
 
@@ -77,7 +77,27 @@ const transaction = async (req, res, next) => {
   }
 }
 
+const detailTransaction = async (req, res, next) => {
+  try {
+    const { id } = req.params
+
+    const response = await transactionModels.detailTransaction(id)
+
+    if (response.length) {
+      res.status(200)
+       res.json({
+         data: response
+       });
+    } else {
+      res.status(404).send({ message: "Data not found" });
+    }
+  } catch (error) {
+    next(new Error(error.message))
+  }
+}
+
 module.exports = {
   history,
-  transaction
+  transaction,
+  detailTransaction
 };

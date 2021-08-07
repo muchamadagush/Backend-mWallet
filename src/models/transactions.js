@@ -18,9 +18,20 @@ const transaction = (data) => new Promise((resolve, reject) => {
       reject(error);
     }
   });
+});
+
+const detailTransaction = (id) => new Promise((resolve, reject) => {
+  conn.query(`SELECT * FROM transactions WHERE id = ?`, id, (error, result) => {
+    if (!error) {
+      resolve(result)
+    } else {
+      reject(error)
+    }
+  })
 })
 
 module.exports = {
   history,
-  transaction
+  transaction,
+  detailTransaction
 };
