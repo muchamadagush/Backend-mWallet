@@ -26,24 +26,8 @@ const findUser = (email) => {
     );
   });
 };
-// const activationUser = (email) => {
-//   return new Promise((resolve, reject) => {
-//     connection.query(
-//       `UPDATE users SET status = "ACTIVED" where email = "${email}"`,
-
-//       (error, result) => {
-//         if (!error) {
-//           resolve(result);
-//         } else {
-//           reject(error);
-//         }
-//       }
-//     );
-//   });
-// };
 
 module.exports = {
   insertUser,
   findUser,
-//   activationUser,
 };

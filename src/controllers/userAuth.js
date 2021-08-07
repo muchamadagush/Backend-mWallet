@@ -42,7 +42,6 @@ const register = async (req, res, next) => {
             process.env.ACCESS_TOKEN_SECRET,
             { expiresIn: "2h" },
             function (err, token) {
-            //   console.log(token);
               common.sendEmail(data.email, data.username, token);
             }
           );
@@ -56,65 +55,9 @@ const register = async (req, res, next) => {
   });
 };
 
-// const login = async (req, res, next) => {
-//   const { email, password } = req.body;
-//   const result = await userModels.findUser(email);
-//   const user = result[0];
-//   const status = user.status;
- 
-//   if (status == "ACTIVED") {
-//     bcrypt.compare(password, user.password, function (err, resCompare) {
-//       if (!resCompare) {
-//         return helpers.response(res, "password wrong", null, 401);
-//       }
 
-//       // generate token
-//       jwt.sign(
-//         { username:data.username, email: data.email,pin:data.pin, role: data.role },
-//         process.env.ACCESS_TOKEN_SECRET,
-//         { expiresIn: "24h" },
-//         function (err, token) {
-//           console.log(token);
-//           console.log(process.env.ACCESS_TOKEN_SECRET);
-//           delete user.password;
-//           user.token = token;
-//           helpers.response(res, "success login", user, 200);
-//         }
-//       );
-//     });
-//   } else {
-//     return helpers.response(res, "account not actived", null, 401);
-//   }
-// };
-
-// const activation = (req, res, next) => {
-//   const token = req.params.token;
-//   if (!token) {
-//     const error = new Error("server need token");
-//     error.code = 401;
-//     return next(error);
-//   }
-//   jwt.verify(token, process.env.SECRET_KEY, function (err, decoded) {
-//     if (err) {
-//       helpers.response(res, "Activation failed", null, 401);
-//     }
-//     const email = decoded.email;
-//     const role = decoded.role;
-//     userModels
-//       .activationUser(email)
-//       .then(() => {
-//         // alert(`Activation Sucessful`)
-//         res.redirect(`${process.env.FRONT_URL}/login/${role}`);
-//       })
-
-//       .catch((error) => {
-//         helpers.response(res, "failed change status", null, 401);
-//       });
-//   });
-// };
 
 module.exports = {
   register,
-//   login,
-//   activation,
+
 };
