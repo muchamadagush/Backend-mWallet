@@ -14,10 +14,12 @@ exports.getAllUsers = (req, res) => {
         helper.responseError(res, 400, "Users not found");
         return;
       }
+      delete result.password;
       helper.responsePagination(
         res,
         200,
         "Showing all users",
+        meta,
         totalData,
         totalPage,
         result,
@@ -83,9 +85,9 @@ exports.updateUsers =  (req, res) => {
   }
 
   usersModel.updateUsers(id, data)
-  .then((result) => {
-    delete result[0].password;
-    helper.responseSuccess(res, 200, "Successfully updated user's profile", result);
+  .then(() => {
+    // console.log(result0
+    helper.responseSuccess(res, 200, "Successfully updated user's profile", data);
   })
   .catch((err) => {
     if (err.message === "Internal server error") {
