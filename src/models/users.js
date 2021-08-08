@@ -45,26 +45,26 @@ const connection = require("../configs/db");
   //   });
   // };
 
-  exports.deleteUsers = (id) => {
-    return new Promise((resolve, reject) => {
-      connection.query("DELETE FROM users WHERE id = ?", id, (err, result) => {
-        if (!err) {
-          resolve(result);
-        } else {
-          reject(new Error("Internal server error"));
-        }
-      });
-    });
-  };
+  // exports.deleteUsers = (id) => {
+  //   return new Promise((resolve, reject) => {
+  //     connection.query("DELETE FROM users WHERE id = ?", id, (err, result) => {
+  //       if (!err) {
+  //         resolve(result);
+  //       } else {
+  //         reject(new Error("Internal server error"));
+  //       }
+  //     });
+  //   });
+  // };
 
-// exports.updateUsers = (id, data) => {
-//       return new Promise((resolve, reject) => {
-//         connection.query('UPDATE users SET ? WHERE id = ?', [data, id], (error, result) => {
-//           if (!error) {
-//             resolve(result)
-//           } else {
-//             reject(error)
-//           }
-//         })
-//       })
-//     }
+exports.updateUsers = (id, data) => {
+      return new Promise((resolve, reject) => {
+        connection.query('UPDATE users SET ? WHERE id = ?', [data, id], (error, result) => {
+          if (!error) {
+            resolve(result)
+          } else {
+            reject(error)
+          }
+        })
+      })
+    }

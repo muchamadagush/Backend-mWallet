@@ -50,47 +50,47 @@ const helper = require("../helpers/helper");
 // };
 
 
-exports.deleteUsers = (req, res) => {
-  const id = req.params.id;
+// exports.deleteUsers = (req, res) => {
+//   const id = req.params.id;
 
-  usersModel
-    .deleteUsers(id)
-    .then((result) => {
-      helper.responseSuccess(res, 200, "Succesfully deleted a user", {});
-    })
-    .catch((err) => {
-      if (err.message === "Internal server error") {
-        helper.responseError(res, 500, err.message);
-      }
-      helper.responseError(res, 400, err.message);
-    });
-};
+//   usersModel
+//     .deleteUsers(id)
+//     .then((result) => {
+//       helper.responseSuccess(res, 200, "Succesfully deleted a user", {});
+//     })
+//     .catch((err) => {
+//       if (err.message === "Internal server error") {
+//         helper.responseError(res, 500, err.message);
+//       }
+//       helper.responseError(res, 400, err.message);
+//     });
+// };
 
-// exports.updateUsers =  (req, res) => {
-//   const id = req.params.id
-//   const { username, email, password, phone, pin, avatar, amount } = req.body
-//   const data = { 
-//     id,
-//     username,
-//     email,
-//     password,
-//     phone,
-//     pin,
-//     avatar,
-//     amount,
-//     createdAt: new Date(),
-//     updatedAt: new Date()
-//   }
+exports.updateUsers =  (req, res) => {
+  const id = req.params.id
+  const { username, email, password, phone, pin, avatar, amount } = req.body
+  const data = { 
+    id,
+    username,
+    email,
+    password,
+    phone,
+    pin,
+    avatar,
+    amount,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }
 
-//   usersModel.updateUsers(id, data)
-//   .then((result) => {
-//     delete result[0].password;
-//     helper.responseSuccess(res, 200, "Successfully updated user's profile", result);
-//   })
-//   .catch((err) => {
-//     if (err.message === "Internal server error") {
-//       helper.responseError(res, 500, err.message);
-//     }
-//     helper.responseError(res, 400, err.message);
-//   });
-// }
+  usersModel.updateUsers(id, data)
+  .then((result) => {
+    delete result[0].password;
+    helper.responseSuccess(res, 200, "Successfully updated user's profile", result);
+  })
+  .catch((err) => {
+    if (err.message === "Internal server error") {
+      helper.responseError(res, 500, err.message);
+    }
+    helper.responseError(res, 400, err.message);
+  });
+}
