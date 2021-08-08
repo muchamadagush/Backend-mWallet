@@ -33,9 +33,21 @@ const connection = require("../configs/db");
 //   };
 
 
-  exports.getUsersById = (id) => {
+  // exports.getUsersById = (id) => {
+  //   return new Promise((resolve, reject) => {
+  //     connection.query("SELECT * FROM users WHERE id = ?", id, (err, result) => {
+  //       if (!err) {
+  //         resolve(result);
+  //       } else {
+  //         reject(new Error("Internal server error"));
+  //       }
+  //     });
+  //   });
+  // };
+
+  exports.deleteUsers = (id) => {
     return new Promise((resolve, reject) => {
-      connection.query("SELECT * FROM users WHERE id = ?", id, (err, result) => {
+      connection.query("DELETE FROM users WHERE id = ?", id, (err, result) => {
         if (!err) {
           resolve(result);
         } else {
@@ -44,18 +56,6 @@ const connection = require("../configs/db");
       });
     });
   };
-
-//   exports.deleteUsers = (id) => {
-//     return new Promise((resolve, reject) => {
-//       connection.query("DELETE FROM users WHERE id = ?", id, (err, result) => {
-//         if (!err) {
-//           resolve(result);
-//         } else {
-//           reject(new Error("Internal server error"));
-//         }
-//       });
-//     });
-//   };
 
 // exports.updateUsers = (id, data) => {
 //       return new Promise((resolve, reject) => {
