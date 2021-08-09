@@ -16,23 +16,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(morgan('dev'))
 app.use(cors())
-// app.use(setCors())
-// app.use((req, res, next) => {
-//   res.setHeader('Access-Control-Allow-Origin', '*')
-//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE') // If needed
-//   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type') // If needed
-//   res.setHeader('Access-Control-Allow-Credentials', true) // If needed
-//   next()
-// })
-// app.use(morgan('dev'))
 
 app.use('/v1', router)
-// app.use('/file', express.static('./images'))
-
-// app.use('/product', productRouter)
-// app.use('/user', userRouter)
-// app.use('/history', historyRouter)
-// app.use('/category', categoryRouter)
 
 app.use('*', (req, res, next) => {
   const error = new createError.NotFound()
@@ -40,12 +25,11 @@ app.use('*', (req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-  console.error(err)
   res.status(err.status || 500).json({
-    message: err.message || 'internal server Error'
-  })
-})
+    message: err.message || "internal server Error",
+  });
+});
 
-app.listen(4000, () => {
-  console.log('server is running on port 4000')
-})
+app.listen(process.env.PORT, () => {
+  console.log(`Server started on ${process.env.PORT}`);
+});
