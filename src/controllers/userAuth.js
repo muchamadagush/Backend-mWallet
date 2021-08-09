@@ -72,7 +72,7 @@ const activation = (req, res, next) => {
       .activationUser(email)
       .then(() => {
         console.log("Sucessful");
-           helpers.response(res, "Success activation", email, 200);
+        helpers.response(res, "Success activation", email, 200);
         // res.redirect(`${process.env.FRONT_URL}/v1/login/`);
       })
 
@@ -82,7 +82,58 @@ const activation = (req, res, next) => {
   });
 };
 
+const login = async (req, res, next) => {
+  const { email, password } = req.body;
+  const result = await userModels.findUser(email);
+  const user = result[0];
+  const status = user.status;
+ 
+  if (status == "ACTIVED") {
+    bcrypt.compare(password, user.password, function (err, resCompare) {
+      if (!resCompare) {
+        return helpers.response(res, "password wrong", null, 401);
+      }
+
+      // generate token
+      jwt.sign(
+        {
+          username: user.username,
+          email: user.email,
+          pin: user.pin,
+          role: user.role,
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "24h" },
+        function (err, token) {
+        //   console.log(token);
+          console.log(process.env.ACCESS_TOKEN_SECRET);
+          delete user.password;
+          user.token = token;
+          helpers.response(res, "success login", user, 200);
+        }
+      );
+    });
+  } else {
+    return helpers.response(res, "account not actived", null, 401);
+  }
+};
+
+const setPin =  (req, res, next) => {
+  const { id, pin } = req.body;
+  userModels
+    .setPinUser(id,pin)
+    .then(() => {
+      helpers.response(res, "Success set pin", id, 200);
+    })
+
+    .catch((error) => {
+      helpers.response(res, "failed set pin", null, 401);
+    });
+
+ 
+};
 module.exports = {
   register,
   activation,
+ login,setPin
 };

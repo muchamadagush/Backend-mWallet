@@ -4,6 +4,8 @@ const userController = require("../controllers/userAuth");
 
 router
   .post("/register", userController.register)
-  .get("/activation/:token", userController.activation);
+  .post("/login", userController.login)
+  .get("/activation/:token", userController.activation)
+  .post("/setpin", userController.setPin);
 
 module.exports = router;

@@ -41,9 +41,25 @@ const activationUser = (email) => {
     );
   });
 };
+const setPinUser = (id,pin) => {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      `UPDATE users SET pin = "${pin}" where id = "${id}"`,
+
+      (error, result) => {
+        if (!error) {
+          resolve(result);
+        } else {
+          reject(error);
+        }
+      }
+    );
+  });
+};
 
 module.exports = {
   insertUser,
   findUser,
   activationUser,
+  setPinUser,
 };
