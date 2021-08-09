@@ -111,19 +111,18 @@ const login = async (req, res, next) => {
   }
 };
 
-const setPin =  (req, res, next) => {
-  const { id, pin } = req.body;
-  userModels
-    .setPinUser(id,pin)
-    .then(() => {
-      helpers.response(res, "Success set pin", id, 200);
-    })
+const setPin = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const { pin } = req.body
 
-    .catch((error) => {
-      helpers.response(res, "failed set pin", null, 401);
-    });
+    userModels.setPinUser(id, pin)
 
- 
+    helpers.response(res, "Success set pin", id, 200);
+
+  } catch (error) {
+    helpers.response(res, "failed set pin", null, 401);
+  }
 };
 module.exports = {
   register,
