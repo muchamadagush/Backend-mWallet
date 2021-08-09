@@ -18,7 +18,7 @@ const register = async (req, res, next) => {
   if (user.length > 0) {
     return helpers.response(res, "email sudah ada", null, 401);
   }
-  console.log(user);
+ 
   bcrypt.genSalt(10, function (err, salt) {
     bcrypt.hash(password, salt, function (err, hash) {
       // Store hash in your password DB.
@@ -73,7 +73,7 @@ const activation = (req, res, next) => {
       .then(() => {
         console.log("Sucessful");
         helpers.response(res, "Success activation", email, 200);
-        // res.redirect(`${process.env.FRONT_URL}/v1/login/`);
+        res.redirect(`${process.env.FRONT_URL}/login/`);
       })
 
       .catch((error) => {
@@ -131,51 +131,60 @@ const setPin =  (req, res, next) => {
 };
 
 const forgotPassword =  (req, res, next) => {
-  const  email = req.body;
+  const  {email} = req.body;
    userModels
      .findUser(email)
      .then((result) => {
          const user = result[0];
-       helpers.response(res, "Success find user", user, 200);
+           delete user.password;
          jwt.sign(
            { username: user.username, email: user.email },
            process.env.ACCESS_TOKEN_SECRET,
            { expiresIn: "2h" },
            function (err, token) {
-             common.sendEmailResetPassword(user.email, user.username, token);
+             common.sendEmailResetPassword(user.email, user.username, token); 
+               helpers.response(res, "Success forgot password", user, 200);
            }
-         );
-         helpers.response(res, "Success token", data, 200);
+         )
+      
      })
      .catch((error) => {
-       helpers.response(res, "failed find user", null, 401);
+       helpers.response(res, "failed forgot password", null, 401);
      });
 }
 
 const resetPassword = (req, res, next) => {
   const token = req.params.token;
-  const newPassword = req.body
-  if (!token) {
-    const error = new Error("server need token");
-    error.code = 401;
-    return next(error);
-  }
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, decoded) {
-    if (err) {
-      helpers.response(res, "Access denied", null, 401);
-    }
-    const email = decoded.email;
-    userModels
-      .resetPassword(email, newPassword)
-      .then(() => {
-        helpers.response(res, "Success set new password", email, 200);
-        // res.redirect(`${process.env.FRONT_URL}/v1/login/`);
-      })
+  const {newPassword} = req.body
+  bcrypt.genSalt(10, function (err, salt) {
+    bcrypt.hash(newPassword, salt, function (err, hash) {
+      if (!token) {
+        const error = new Error("server need token");
+        error.code = 401;
+        return next(error);
+      }
+      jwt.verify(
+        token,
+        process.env.ACCESS_TOKEN_SECRET,
+        function (err, decoded) {
+          if (err) {
+            helpers.response(res, "Access denied", null, 401);
+          }
+          const email = decoded.email;
+          userModels
+            .resetPassword(email, hash)
+            .then(() => {
+              helpers.response(res, "Success set new password", email, 200);
+              // res.redirect(`${process.env.FRONT_URL}/v1/login/`);
+            })
 
-      .catch((error) => {
-        helpers.response(res, "failed set new password", null, 401);
-      });
-  });
+            .catch((error) => {
+              helpers.response(res, "failed set new password", null, 401);
+            });
+        }
+      );
+    });
+  })
 };
 module.exports = {
   register,
