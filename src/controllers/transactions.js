@@ -1,11 +1,13 @@
 const transactionModels = require("../models/transactions");
-const userModels = require("../models/users")
+// const userModels = require("../models/users")
 const { v4: uuid } = require("uuid");
+const path = require('path')
 
 const history = async (req, res, next) => {
   try {
     const { userId } = req.params;
     const response = await transactionModels.history(userId)
+    console.log(userId)
     if (response) {
       res.status(200);
       res.json({
@@ -18,6 +20,7 @@ const history = async (req, res, next) => {
       });
     }
   } catch (error) {
+    console.log(error.response)
     next(new Error(error.response));
   }
 };
@@ -96,8 +99,23 @@ const detailTransaction = async (req, res, next) => {
   }
 }
 
+const topup = async (req, res, next) => {
+  try {
+    const { callback_virtual_account_id, amount } = req.body
+
+    // get data from topup table where id = callback_virtual_account_id
+
+    // get user where id = userid from table topup
+
+    // update amount user + amount topup
+  } catch (error) {
+    next(new Error(error.message))    
+  }
+}
+
 module.exports = {
   history,
   transaction,
-  detailTransaction
+  detailTransaction,
+  topup
 };
