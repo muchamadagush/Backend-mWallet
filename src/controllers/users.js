@@ -31,40 +31,40 @@ const helper = require("../helpers/helper");
 // };
 
 
-exports.getUsersById = (req, res) => {
-  const id = req.params.id;
-
-  usersModel
-    .getUsersById(id)
-    .then((result) => {
-      if (result < 1) {
-        helper.responseError(res, 400, `User with id: ${id} is not found`);
-        return;
-      }
-      delete result[0].password;
-      helper.responseSuccess(res, 200, "One user found", result);
-    })
-    .catch((err) => {
-      helper.responseError(res, 500, err.message);
-    });
-};
-
-
-// exports.deleteUsers = (req, res) => {
+// exports.getUsersById = (req, res) => {
 //   const id = req.params.id;
 
 //   usersModel
-//     .deleteUsers(id)
+//     .getUsersById(id)
 //     .then((result) => {
-//       helper.responseSuccess(res, 200, "Succesfully deleted a user", {});
+//       if (result < 1) {
+//         helper.responseError(res, 400, `User with id: ${id} is not found`);
+//         return;
+//       }
+//       delete result[0].password;
+//       helper.responseSuccess(res, 200, "One user found", result);
 //     })
 //     .catch((err) => {
-//       if (err.message === "Internal server error") {
-//         helper.responseError(res, 500, err.message);
-//       }
-//       helper.responseError(res, 400, err.message);
+//       helper.responseError(res, 500, err.message);
 //     });
 // };
+
+
+exports.deleteUsers = (req, res) => {
+  const id = req.params.id;
+
+  usersModel
+    .deleteUsers(id)
+    .then((result) => {
+      helper.responseSuccess(res, 200, "Succesfully deleted a user", {});
+    })
+    .catch((err) => {
+      if (err.message === "Internal server error") {
+        helper.responseError(res, 500, err.message);
+      }
+      helper.responseError(res, 400, err.message);
+    });
+};
 
 // exports.updateUsers =  (req, res) => {
 //   const id = req.params.id
