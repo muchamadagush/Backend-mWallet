@@ -1,5 +1,7 @@
 const usersModel = require("../models/users");
 const helper = require("../helpers/helper");
+const { v4: uuidv4 } = require('uuid')
+const path = require('path')
 
 exports.getAllUsers = (req, res) => {
   const { page, perPage } = req.query;
@@ -14,17 +16,24 @@ exports.getAllUsers = (req, res) => {
         helper.responseError(res, 400, "Users not found");
         return;
       }
-      delete result.password;
+
+      for (let i = 0; i < perPage; i++) {
+        if (result[i] === undefined) {
+          break;
+        } else {
+          delete result[i].password;
+        }
+      }
+
       helper.responsePagination(
         res,
         200,
         "Showing all users",
-        meta,
         totalData,
         totalPage,
-        result,
         page,
-        perPage
+        perPage,
+        result,
       );
     })
     .catch((err) => {
@@ -33,32 +42,62 @@ exports.getAllUsers = (req, res) => {
 };
 
 
-exports.getUsersById = (req, res) => {
-  const id = req.params.id;
+// exports.getUsersById = (req, res) => {
+//   const id = req.params.id;
 
-  usersModel
-    .getUsersById(id)
-    .then((result) => {
-      if (result < 1) {
-        helper.responseError(res, 400, `User with id: ${id} is not found`);
-        return;
-      }
-      delete result[0].password;
-      helper.responseSuccess(res, 200, "One user found", result);
-    })
-    .catch((err) => {
-      helper.responseError(res, 500, err.message);
-    });
-};
+//   usersModel
+//     .getUsersById(id)
+//     .then((result) => {
+//       delete result[0].password;
+//       if (result < 1) {
+//         helper.responseError(res, 400, `User with id: ${id} is not found`);
+//         return;
+//       }
+//       helper.responseSuccess(res, 200, "One user found", result);
+//     })
+//     .catch((err) => {
+//       helper.responseError(res, 500, err.message);
+//     });
+// };
 
 
-exports.deleteUsers = (req, res) => {
-  const id = req.params.id;
+// exports.deleteUsers = (req, res) => {
+//   const id = req.params.id;
 
-  usersModel
-    .deleteUsers(id)
-    .then((result) => {
-      helper.responseSuccess(res, 200, "Succesfully deleted a user", {});
+//   usersModel
+//     .deleteUsers(id)
+//     .then((result) => {
+//       helper.responseSuccess(res, 200, "Succesfully deleted a user", {});
+//     })
+//     .catch((err) => {
+//       if (err.message === "Internal server error") {
+//         helper.responseError(res, 500, err.message);
+//       }
+//       helper.responseError(res, 400, err.message);
+//     });
+// };
+
+exports.updateUsers = (req, res) => {
+    const id = req.params.id
+    const { username, email, password, phone, pin, avatar, amount, role } = req.body
+    const data = {
+      id: uuidv4(),
+      username,
+      email,
+      password,
+      phone,
+      pin,
+      avatar: `${process.env.API_URL}/file/${req.file.filename}`,
+      amount,
+      role,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+   
+    usersModel.updateUsers(id, data)
+    .then(() => {
+      delete data.password;
+      helper.responseSuccess(res, 200, "Successfully updated user's profile", data);
     })
     .catch((err) => {
       if (err.message === "Internal server error") {
@@ -66,33 +105,9 @@ exports.deleteUsers = (req, res) => {
       }
       helper.responseError(res, 400, err.message);
     });
-};
 
-exports.updateUsers =  (req, res) => {
-  const id = req.params.id
-  const { username, email, password, phone, pin, avatar, amount } = req.body
-  const data = { 
-    id,
-    username,
-    email,
-    password,
-    phone,
-    pin,
-    avatar,
-    amount,
-    createdAt: new Date(),
-    updatedAt: new Date()
-  }
 
-  usersModel.updateUsers(id, data)
-  .then(() => {
-    // console.log(result0
-    helper.responseSuccess(res, 200, "Successfully updated user's profile", data);
-  })
-  .catch((err) => {
-    if (err.message === "Internal server error") {
-      helper.responseError(res, 500, err.message);
-    }
-    helper.responseError(res, 400, err.message);
-  });
+
+
 }
+
