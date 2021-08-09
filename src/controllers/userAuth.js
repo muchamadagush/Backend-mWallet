@@ -175,7 +175,7 @@ const resetPassword = (req, res, next) => {
             .resetPassword(email, hash)
             .then(() => {
               helpers.response(res, "Success set new password", email, 200);
-              // res.redirect(`${process.env.FRONT_URL}/v1/login/`);
+              res.redirect(`${process.env.FRONT_URL}/login/`);
             })
 
             .catch((error) => {
