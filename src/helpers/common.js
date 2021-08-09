@@ -573,7 +573,7 @@ const sendEmail = (toEmail, toName, token) => {
                                 <div align="center">
                                   <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:'Cabin',sans-serif;"><tr><td style="font-family:'Cabin',sans-serif;" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:46px; v-text-anchor:middle; width:234px;" arcsize="8.5%" stroke="f" fillcolor="#ff6600"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Cabin',sans-serif;"><![endif]-->
                                   <a
-                                    href=""
+                                    href="${process.env.BASE_URL}/v1/activation/${token}"
                                     target="_blank"
                                     style="
                                       box-sizing: border-box;
@@ -607,12 +607,12 @@ const sendEmail = (toEmail, toName, token) => {
                                           line-height: 19.2px;
                                         "
                                         ><strong
-                                          ><a href="${process.env.BASE_URL}/v1/activation/${token}"
+                                          ><span
                                             style="
                                               line-height: 19.2px;
                                               font-size: 16px;
                                             "
-                                            >VERIFY YOUR EMAIL</a
+                                            >VERIFY YOUR EMAIL</span
                                           ></strong
                                         ></span
                                       ></span
