@@ -27,7 +27,6 @@ const register = async (req, res, next) => {
         username: username,
         email: email,
         password: hash,
-        phone: phone,
         role: role,
         status: "UNACTIVED",
         createdAt: new Date(),
