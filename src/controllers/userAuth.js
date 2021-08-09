@@ -10,7 +10,6 @@ const register = async (req, res, next) => {
     username,
     email,
     password,
-    phone,
     role,
   } = req.body;
 
