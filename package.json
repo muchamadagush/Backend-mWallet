@@ -1,5 +1,5 @@
 {
-  "name": "week-8",
+  "name": "mwallet",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -16,12 +16,18 @@
     "mysql2": "^2.3.0",
     "nodemailer": "^6.6.3",
     "redis": "^3.1.2",
+    "nodemon": "^2.0.9",
     "uuid": "^8.3.2"
   },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "devDependencies": {
+    "eslint": "^7.30.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.23.4"
   },
-  "author": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "author": "Matrix",
   "license": "ISC"
 }

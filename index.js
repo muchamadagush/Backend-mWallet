@@ -1,15 +1,10 @@
 const express = require('express')
 require('dotenv').config()
 const app = express()
-// const bodyParser = require('body-parser')
-const usersRouter = require('./src/router/users')
 const morgan = require('morgan')
-const { v4: uuidv4 } = require('uuid')
 const cors = require('cors')
-// const setCors = require('./src/middlewares/cors')
 const createError = require('http-errors')
-// const { route } = require('./src/router/product')
-const router = require('./src/router')
+const router = require('./src/routes')
 
 // middleware
 app.use(express.json())
