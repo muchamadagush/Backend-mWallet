@@ -56,7 +56,6 @@ const register = async (req, res, next) => {
   });
 };
 
-
 const activation = (req, res, next) => {
   const token = req.params.token;
   if (!token) {
@@ -72,7 +71,6 @@ const activation = (req, res, next) => {
     userModels
       .activationUser(email)
       .then(() => {
-        // alert(`Activation Sucessful`)
         console.log("Sucessful");
         helpers.response(res, "Success activation", email, 200);
         // res.redirect(`${process.env.FRONT_URL}/v1/login/`);

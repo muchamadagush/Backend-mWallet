@@ -1,22 +1,4 @@
-const nodemailer = require("nodemailer");
-const helpers = require("./helpers");
-// const emailTemplate = require("./emailTemplate.js");
-
-const sendEmail = (toEmail, toName, token) => {
-  // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
-    service: "Gmail",
-    auth: {
-      user: process.env.ZWALLET_EMAIL, // generated ethereal user
-      pass: process.env.ZWALLET_PASS, // generated ethereal password
-    },
-  });
-  transporter
-    .sendMail({
-      from: `"Zwallet Finance Solution" <${process.env.ZWALLET_EMAIL}>`, // sender address
-      to: `${toEmail}`, // list of receivers
-      subject: `Activation for ${toName}`, // Subject line
-      html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head>
@@ -530,7 +512,7 @@ const sendEmail = (toEmail, toName, token) => {
                                         font-size: 22px;
                                         line-height: 35.2px;
                                       "
-                                      >Hi ${toName},
+                                      >Hi Username,
                                     </span>
                                   </p>
                                   <p style="font-size: 14px; line-height: 160%">
@@ -573,7 +555,7 @@ const sendEmail = (toEmail, toName, token) => {
                                 <div align="center">
                                   <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:'Cabin',sans-serif;"><tr><td style="font-family:'Cabin',sans-serif;" align="center"><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:46px; v-text-anchor:middle; width:234px;" arcsize="8.5%" stroke="f" fillcolor="#ff6600"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Cabin',sans-serif;"><![endif]-->
                                   <a
-                                    href="${process.env.BASE_URL}/v1/activation/${token}"
+                                    href=""
                                     target="_blank"
                                     style="
                                       box-sizing: border-box;
@@ -1228,18 +1210,4 @@ const sendEmail = (toEmail, toName, token) => {
     <!--[if mso]></div><![endif]-->
     <!--[if IE]></div><![endif]-->
   </body>
-</html>`, // html body
-    })
-    .then(() => {
-      console.log("Success send email data");
-      //   helpers.response(res, "Success send email data", toEmail, 200);
-    })
-    .catch((error) => {
-      console.log(error);
-      //   helpers.response(res, "Failed send email data", null, 404);
-    });
-};
-
-module.exports = {
-  sendEmail,
-};
+</html>
