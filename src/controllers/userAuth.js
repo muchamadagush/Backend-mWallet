@@ -55,7 +55,6 @@ const register = async (req, res, next) => {
   });
 };
 
-
 const activation = (req, res, next) => {
   const token = req.params.token;
   if (!token) {
@@ -72,7 +71,7 @@ const activation = (req, res, next) => {
       .activationUser(email)
       .then(() => {
         helpers.response(res, "Success activation", email, 200);
-        // res.redirect(`${process.env.FRONT_URL}/v1/login/`);
+        res.redirect(`${process.env.FRONT_URL}/login/`);
       })
 
       .catch((error) => {
@@ -116,9 +115,23 @@ const login = async (req, res, next) => {
   }
 };
 
+const setPin =  (req, res, next) => {
+  const { id, pin } = req.body;
+  userModels
+    .setPinUser(id,pin)
+    .then(() => {
+      helpers.response(res, "Success set pin", id, 200);
+    })
 
+    .catch((error) => {
+      helpers.response(res, "failed set pin", null, 401);
+    });
+
+ 
+};
 module.exports = {
   register,
   activation,
- login
+  login,
+  setPin
 };
