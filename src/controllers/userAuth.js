@@ -10,8 +10,6 @@ const register = async (req, res, next) => {
     username,
     email,
     password,
-    phone,
-    role,
   } = req.body;
 
   const user = await userModels.findUser(email);
@@ -27,8 +25,7 @@ const register = async (req, res, next) => {
         username: username,
         email: email,
         password: hash,
-        phone: phone,
-        role: role,
+        role: "MEMBER",
         status: "UNACTIVED",
         createdAt: new Date(),
       };
@@ -73,8 +70,8 @@ const activation = (req, res, next) => {
       .activationUser(email)
       .then(() => {
         console.log("Sucessful");
-           helpers.response(res, "Success activation", email, 200);
-        res.redirect(`${process.env.FRONT_URL}/login/`);
+          //  helpers.response(res, "Success activation", email, 200);
+        res.redirect(`${process.env.FRONT_URL}/login`);
       })
 
       .catch((error) => {
