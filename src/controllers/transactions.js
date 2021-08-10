@@ -1,5 +1,5 @@
-const transactionModels = require("../models/products");
-const userModels = require("../models/users")
+const transactionModels = require("../models/transactions");
+const contactModels = require("../models/contacts")
 const { v4: uuid } = require("uuid");
 
 const history = async (req, res, next) => {
@@ -64,6 +64,18 @@ const transaction = async (req, res, next) => {
 
     await userModels.updateUser(idUserTransfer, upadateUserTransfer)
     await userModels.updateUser(idUserTopup, upadateUserTopup)
+
+    const findContact = contactModels.findContact(idUserTopup, idUserTransfer)
+
+    if (!findContact) {
+      const dataContact = {
+        id: uuid().split("-").join(""),
+        idUser: idUserTopup,
+        idUserContact: idUserTransfer
+      }
+  
+      await contactModels.createContact(dataContact)
+    }
 
     response.info = "Transfer Success"
     data.message = response.info
