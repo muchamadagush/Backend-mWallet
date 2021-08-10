@@ -182,10 +182,26 @@ const topup = async (req, res, next) => {
     const { callback_virtual_account_id, amount } = req.body
 
     // get data from topup table where id = callback_virtual_account_id
+    const data = await topupModels.getDataById(callback_virtual_account_id)
 
     // get user where id = userid from table topup
+    const userId = data[0].userId
+    const user = await userModels.getUsersById(userId)
 
     // update amount user + amount topup
+    const amountUser = user[0].amount + amount
+    const dataUpdate = {
+      amount: amountUser,
+      updatedAt: new Date()
+    }
+
+    await userModels.updateUsers(userId, dataUpdate)
+
+    res.status(200)
+    res.json({
+      message: "Topup success",
+      data: req.body
+    });
   } catch (error) {
     next(new Error(error.message))
   }
