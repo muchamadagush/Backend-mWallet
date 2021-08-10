@@ -2,20 +2,14 @@ exports.responsePagination = (
     res,
     statusCode,
     message,
-    totalData,
-    totalPage,
+    meta,
     data,
-    currentPage,
-    perPage
 ) => {
     res.status(statusCode).json({
         status: statusCode === 200,
         message,
-        totalData,
-        totalPage,
+        meta,
         data,
-        currentPage,
-        perPage,
     });
 };
 
