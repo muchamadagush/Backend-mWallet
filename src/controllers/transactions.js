@@ -1,7 +1,12 @@
 const transactionModels = require("../models/transactions");
 const contactModels = require("../models/contacts")
 const userModels = require("../models/users")
+const topupModels = require("../models/topup")
 const { v4: uuid } = require("uuid");
+const Xendit = require('xendit-node');
+const x = new Xendit({
+  secretKey: 'xnd_development_GomfrGhMBtwHIglXqNyFgmzzlc2X0eZkFuePKNegd1OkAbRiK7PbW56B384vNU2',
+});
 
 const history = async (req, res, next) => {
   try {
@@ -79,7 +84,7 @@ const transaction = async (req, res, next) => {
     amountUserTransfer = amountUserTransfer - parseInt(amount)
     amountuserTopup = amountuserTopup + parseInt(amount)
 
-    if (amountUserTransfer < 0) return  res.status(400).send({ message: 'your remaining balance is insufficient, please refill it first' });
+    if (amountUserTransfer < 0) return res.status(400).send({ message: 'your remaining balance is insufficient, please refill it first' });
 
     const upadateUserTransfer = {
       amount: amountUserTransfer,
@@ -104,10 +109,10 @@ const transaction = async (req, res, next) => {
         createdAt: new Date(),
         updatedAt: new Date()
       }
-  
+
       await contactModels.createContact(dataContact)
     }
-    
+
     response.info = "Transfer Success"
     data.message = response.info
     data.status = true
@@ -131,9 +136,42 @@ const detailTransaction = async (req, res, next) => {
       res.json({
         data: response
       });
+
     } else {
       res.status(404).send({ message: "Data not found" });
     }
+  } catch (error) {
+    next(new Error(error.message))
+  }
+}
+
+const createVirtualAccount = async (req, res, next) => {
+  try {
+    const { userId } = req.params
+    const { codeBank } = req.body
+
+    const user = userModels.getUsersById(userId)
+
+    const { VirtualAcc } = x;
+    const vaSpecificOptions = {};
+    const va = new VirtualAcc(vaSpecificOptions);
+
+    const resp = await va.createFixedVA({
+      externalID: `matrix-${userId}`,
+      bankCode: codeBank,
+      name: user[0].username,
+    });
+
+    const data = {
+      id: resp.id,
+      userId: userId,
+      virtualAccount: resp.account_number,
+      simulation: resp.external_id
+    }
+
+    await topupModels.createVirtualAccount(data)
+
+    res.status(201).send({ message: "Successfully created virtual account" })
   } catch (error) {
     next(new Error(error.message))
   }
@@ -157,5 +195,6 @@ module.exports = {
   history,
   transaction,
   detailTransaction,
-  topup
+  topup,
+  createVirtualAccount
 };
