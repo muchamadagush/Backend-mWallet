@@ -6,7 +6,7 @@ router
   .post("/register", userController.register)
   .post("/login", userController.login)
   .get("/activation/:token", userController.activation)
-  .post("/setpin", userController.setPin)
+  .post("/setpin/:id", userController.setPin)
   .get("/forgotpassword", userController.forgotPassword)
   .post("/resetpassword/:token", userController.resetPassword);
 
