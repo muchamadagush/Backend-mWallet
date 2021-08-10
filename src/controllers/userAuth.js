@@ -9,28 +9,27 @@ const register = async (req, res, next) => {
   const {
     username,
     email,
-    password,
-    phone,
-    role,
+    password
   } = req.body;
 
   const user = await userModels.findUser(email);
   if (user.length > 0) {
-    return helpers.response(res, "email sudah ada", null, 401);
+    return helpers.response(res, "email already exists", null, 401);
   }
- 
+
   bcrypt.genSalt(10, function (err, salt) {
     bcrypt.hash(password, salt, function (err, hash) {
       // Store hash in your password DB.
       const data = {
-        id: uuidv4(),
+        id: uuidv4().split('-').join(''),
         username: username,
         email: email,
         password: hash,
-        phone: phone,
-        role: role,
+        role: "MEMBER",
+        amount: 0,
         status: "UNACTIVED",
         createdAt: new Date(),
+        updatedAt: new Date()
       };
 
       userModels
@@ -45,16 +44,14 @@ const register = async (req, res, next) => {
               common.sendEmailActivation(data.email, data.username, token);
             }
           );
-          helpers.response(res, "Success register", data, 200);
+          
         })
         .catch((error) => {
-          console.log(error);
           helpers.response(res, "error register", null, 500);
         });
     });
   });
 };
-
 
 const activation = (req, res, next) => {
   const token = req.params.token;
@@ -71,11 +68,11 @@ const activation = (req, res, next) => {
     userModels
       .activationUser(email)
       .then(() => {
-        console.log("Sucessful");
-        helpers.response(res, "Success activation", email, 200);
-        res.redirect(`${process.env.FRONT_URL}/login/`);
-      })
 
+        //  helpers.response(res, "Success activation", email, 200);
+        res.redirect(`${process.env.FRONT_URL}/login`);
+
+      })
       .catch((error) => {
         helpers.response(res, "failed change status", null, 401);
       });
@@ -105,7 +102,6 @@ const login = async (req, res, next) => {
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: "24h" },
         function (err, token) {
-          console.log(process.env.ACCESS_TOKEN_SECRET);
           delete user.password;
           user.token = token;
           helpers.response(res, "success login", user, 200);
@@ -117,17 +113,18 @@ const login = async (req, res, next) => {
   }
 };
 
-const setPin =  (req, res, next) => {
-  const { id, pin } = req.body;
-  userModels
-    .setPinUser(id,pin)
-    .then(() => {
-      helpers.response(res, "Success set pin", id, 200);
-    })
+const setPin = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const { pin } = req.body
 
-    .catch((error) => {
-      helpers.response(res, "failed set pin", null, 401);
-    });
+    userModels.setPinUser(id, pin)
+
+    helpers.response(res, "Success set pin", id, 200);
+
+  } catch (error) {
+    helpers.response(res, "failed set pin", null, 401);
+  }
 };
 
 const forgotPassword =  (req, res, next) => {
@@ -185,6 +182,7 @@ const resetPassword = (req, res, next) => {
       );
     });
   })
+
 };
 module.exports = {
   register,
