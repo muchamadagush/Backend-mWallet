@@ -1,7 +1,7 @@
 const conn = require('../configs/db');
 
 const history = (userId) => new Promise((resolve, reject) => {
-  conn.query(`SELECT * FROM transactions WHERE userIdTopup = ${userId} OR userIdFrom = ${userId} AND status = 'success'`, (error, result) => {
+  conn.query(`SELECT * FROM transactions WHERE idUserTopup = ? OR idUserTransfer = ? AND status = 'success'`, [userId, userId], (error, result) => {
     if (!error) {
       resolve(result);
     } else {
@@ -18,9 +18,20 @@ const transaction = (data) => new Promise((resolve, reject) => {
       reject(error);
     }
   });
+});
+
+const detailTransaction = (id) => new Promise((resolve, reject) => {
+  conn.query(`SELECT * FROM transactions WHERE id = ?`, id, (error, result) => {
+    if (!error) {
+      resolve(result)
+    } else {
+      reject(error)
+    }
+  })
 })
 
 module.exports = {
   history,
-  transaction
+  transaction,
+  detailTransaction
 };

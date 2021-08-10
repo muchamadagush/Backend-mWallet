@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const transactionRoutes = require('../controllers/transactions.js');
+const transactionRoutes = require('../controllers/transactions.js')
 
 router
   .post('/', transactionRoutes.transaction)
-  .get('/history', transactionRoutes.history)
+  .get('/history/:userId', transactionRoutes.history)
+  .get('/:id', transactionRoutes.detailTransaction)
+  .post('/addvirtualaccount/:userId', transactionRoutes.createVirtualAccount)
+  .post('/topup', transactionRoutes.topup)
 
 module.exports = router
