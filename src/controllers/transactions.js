@@ -147,10 +147,9 @@ const detailTransaction = async (req, res, next) => {
 
 const createVirtualAccount = async (req, res, next) => {
   try {
-    const { userId } = req.params
-    const { codeBank } = req.body
+    const { userId, codeBank } = req.body
 
-    const user = userModels.getUsersById(userId)
+    const user = await userModels.getUsersById(userId)
 
     const { VirtualAcc } = x;
     const vaSpecificOptions = {};
@@ -159,7 +158,7 @@ const createVirtualAccount = async (req, res, next) => {
     const resp = await va.createFixedVA({
       externalID: `matrix-${userId}`,
       bankCode: codeBank,
-      name: user[0].username,
+      name: user[0].username
     });
 
     const data = {
@@ -171,7 +170,10 @@ const createVirtualAccount = async (req, res, next) => {
 
     await topupModels.createVirtualAccount(data)
 
-    res.status(201).send({ message: "Successfully created virtual account" })
+    res.status(201)
+    res.json({
+      message: "Successfully created virtual account"
+    });
   } catch (error) {
     next(new Error(error.message))
   }
