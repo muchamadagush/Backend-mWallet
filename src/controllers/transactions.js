@@ -147,10 +147,10 @@ const detailTransaction = async (req, res, next) => {
 
 const createVirtualAccount = async (req, res, next) => {
   try {
-    const { userId } = req.params
+    const { userId } = req.body
     const { codeBank } = req.body
 
-    const user = userModels.getUsersById(userId)
+    const user = await userModels.getUsersById(userId)
 
     const { VirtualAcc } = x;
     const vaSpecificOptions = {};
