@@ -179,7 +179,7 @@ const createVirtualAccount = async (req, res, next) => {
 
 const topup = async (req, res, next) => {
   try {
-    const { callback_virtual_account_id, amount } = req.body
+    const { callback_virtual_account_id, amount, bank_code, payment_id } = req.body
 
     // get data from topup table where id = callback_virtual_account_id
     const data = await topupModels.getDataById(callback_virtual_account_id)
@@ -187,6 +187,20 @@ const topup = async (req, res, next) => {
     // get user where id = userid from table topup
     const userId = data[0].userId
     const user = await userModels.getUsersById(userId)
+
+    // set transactions
+    const dataTopup = {
+      id: uuid().split("-").join(""),
+      idUserTopup: userId,
+      bankName: bank_code,
+      amount: parseInt(amount),
+      description: payment_id,
+      status: "success",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+
+    await transactionModels.transaction(dataTopup)
 
     // update amount user + amount topup
     const amountUser = user[0].amount + amount
