@@ -1,14 +1,39 @@
 const transactionModels = require("../models/transactions");
 const contactModels = require("../models/contacts")
+const userModels = require("../models/users")
 const { v4: uuid } = require("uuid");
+const path = require('path')
 
 const history = async (req, res, next) => {
   try {
+
     const { userId } = req.params;
-    const response = await transactionModels.history(userId)
-    if (response) {
+
+    const { perPage } = req.query;
+    const page = req.query.page || 1;
+
+    const order = req.query.orderBy || "title";
+    const sort = req.query.sortBy || "ASC";
+    const search = req.query.search || "";
+
+    const limit = perPage || 15;
+    const offset = (page - 1) * limit;
+
+    const response = await transactionModels.history(userId, search)
+
+    const resPagination = await transactionModels.history(userId, search, limit, offset, order, sort, search)
+
+    const allData = response.length
+    const totalPage = Math.ceil(allData / limit);
+    if (resPagination) {
       res.status(200);
       res.json({
+        meta: {
+          allData,
+          page,
+          perPage: limit,
+          totalPage,
+        },
         data: response,
       });
     } else {
@@ -18,6 +43,7 @@ const history = async (req, res, next) => {
       });
     }
   } catch (error) {
+    console.log(error.response)
     next(new Error(error.response));
   }
 };
@@ -76,7 +102,7 @@ const transaction = async (req, res, next) => {
   
       await contactModels.createContact(dataContact)
     }
-
+    
     response.info = "Transfer Success"
     data.message = response.info
     data.status = true
@@ -89,7 +115,42 @@ const transaction = async (req, res, next) => {
   }
 }
 
+const detailTransaction = async (req, res, next) => {
+  try {
+    const { id } = req.params
+
+    const response = await transactionModels.detailTransaction(id)
+
+    if (response.length) {
+      res.status(200)
+      res.json({
+        data: response
+      });
+    } else {
+      res.status(404).send({ message: "Data not found" });
+    }
+  } catch (error) {
+    next(new Error(error.message))
+  }
+}
+
+const topup = async (req, res, next) => {
+  try {
+    const { callback_virtual_account_id, amount } = req.body
+
+    // get data from topup table where id = callback_virtual_account_id
+
+    // get user where id = userid from table topup
+
+    // update amount user + amount topup
+  } catch (error) {
+    next(new Error(error.message))
+  }
+}
+
 module.exports = {
   history,
-  transaction
+  transaction,
+  detailTransaction,
+  topup
 };
