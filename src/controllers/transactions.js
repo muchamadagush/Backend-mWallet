@@ -1,17 +1,38 @@
 const transactionModels = require("../models/transactions");
-// const userModels = require("../models/users")
+const contactModels = require("../models/contacts")
+const userModels = require("../models/users")
 const { v4: uuid } = require("uuid");
-const path = require('path')
 
 const history = async (req, res, next) => {
   try {
 
     const { userId } = req.params;
-    const response = await transactionModels.history(userId)
-    console.log(userId)
-    if (response) {
+
+    const { perPage } = req.query;
+    const page = req.query.page || 1;
+
+    const order = req.query.orderBy || "title";
+    const sort = req.query.sortBy || "ASC";
+    const search = req.query.search || "";
+
+    const limit = perPage || 15;
+    const offset = (page - 1) * limit;
+
+    const response = await transactionModels.history(userId, search)
+
+    const resPagination = await transactionModels.history(userId, search, limit, offset, order, sort, search)
+
+    const allData = response.length
+    const totalPage = Math.ceil(allData / limit);
+    if (resPagination) {
       res.status(200);
       res.json({
+        meta: {
+          allData,
+          page,
+          perPage: limit,
+          totalPage,
+        },
         data: response,
       });
     } else {
@@ -40,9 +61,11 @@ const transaction = async (req, res, next) => {
       id: uuid().split("-").join(""),
       idUserTransfer,
       idUserTopup,
-      amount,
+      amount: parseInt(amount),
       description,
-      status
+      status,
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
 
     const userTransfer = await userModels.getUsersById(idUserTransfer)
@@ -50,25 +73,41 @@ const transaction = async (req, res, next) => {
 
     const response = await transactionModels.transaction(data)
 
-    let amountUserTransfer = userTransfer.amount
-    let amountuserTopup = userTopup.amount
+    let amountUserTransfer = userTransfer[0].amount
+    let amountuserTopup = userTopup[0].amount
 
-    amountUserTransfer = amountUserTransfer - amount
-    amountuserTopup = amountuserTopup + amount
+    amountUserTransfer = amountUserTransfer - parseInt(amount)
+    amountuserTopup = amountuserTopup + parseInt(amount)
+
+    if (amountUserTransfer < 0) return  res.status(400).send({ message: 'your remaining balance is insufficient, please refill it first' });
 
     const upadateUserTransfer = {
       amount: amountUserTransfer,
-      upadatedAt: new Date()
+      updatedAt: new Date()
     }
 
     const upadateUserTopup = {
       amount: amountuserTopup,
-      upadatedAt: new Date()
+      updatedAt: new Date()
     }
 
-    await userModels.updateUser(idUserTransfer, upadateUserTransfer)
-    await userModels.updateUser(idUserTopup, upadateUserTopup)
+    await userModels.updateUsers(idUserTransfer, upadateUserTransfer)
+    await userModels.updateUsers(idUserTopup, upadateUserTopup)
 
+    const findContacts = await contactModels.findContact(idUserTopup, idUserTransfer)
+
+    if (findContacts.length === 0) {
+      const dataContact = {
+        id: uuid().split("-").join(""),
+        idUser: idUserTopup,
+        idUserContact: idUserTransfer,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+  
+      await contactModels.createContact(dataContact)
+    }
+    
     response.info = "Transfer Success"
     data.message = response.info
     data.status = true
@@ -89,9 +128,9 @@ const detailTransaction = async (req, res, next) => {
 
     if (response.length) {
       res.status(200)
-       res.json({
-         data: response
-       });
+      res.json({
+        data: response
+      });
     } else {
       res.status(404).send({ message: "Data not found" });
     }
@@ -110,7 +149,7 @@ const topup = async (req, res, next) => {
 
     // update amount user + amount topup
   } catch (error) {
-    next(new Error(error.message))    
+    next(new Error(error.message))
   }
 }
 

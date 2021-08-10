@@ -8,7 +8,7 @@ exports.getAllUsers = (page, perPage, search, sortBy, order) => {
       (err, result) => {
         let totalData, page, perPage, totalPage;
         if (err) {
-          reject(new Error("Internal server error"));
+          reject(err);
         } else {
           totalData = result[0].totalData;
           page = parseInt(page) || 1;
@@ -21,7 +21,7 @@ exports.getAllUsers = (page, perPage, search, sortBy, order) => {
           [`%${search}%`, `%${search}%`, firstData, perPage],
           (err, result) => {
             if (err) {
-              reject(new Error("Internal server error"));
+              reject(err);
             } else {
               resolve([totalData, totalPage, result, page, perPage]);
             }
@@ -39,7 +39,7 @@ exports.getUsersById = (id) => {
       if (!err) {
         resolve(result);
       } else {
-        reject(new Error("Internal server error"));
+        reject(err);
       }
     });
   });
@@ -51,7 +51,7 @@ exports.deleteUsers = (id) => {
       if (!err) {
         resolve(result);
       } else {
-        reject(new Error("Internal server error"));
+        reject(err);
       }
     });
   });
