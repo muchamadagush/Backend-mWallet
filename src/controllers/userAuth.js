@@ -25,6 +25,7 @@ const register = async (req, res, next) => {
         username: username,
         email: email,
         password: hash,
+        role: "MEMBER",
         amount: 0,
         status: "UNACTIVED",
         createdAt: new Date(),
@@ -41,9 +42,10 @@ const register = async (req, res, next) => {
             { expiresIn: "2h" },
             function (err, token) {
               common.sendEmail(data.email, data.username, token);
+              helpers.response(res, "Success register", data, 200);
             }
           );
-          helpers.response(res, "Success register", data, 200);
+          
         })
         .catch((error) => {
           helpers.response(res, "error register", null, 500);
@@ -67,10 +69,11 @@ const activation = (req, res, next) => {
     userModels
       .activationUser(email)
       .then(() => {
-        helpers.response(res, "Success activation", email, 200);
-        res.redirect(`${process.env.FRONT_URL}/login/`);
-      })
 
+        //  helpers.response(res, "Success activation", email, 200);
+        res.redirect(`${process.env.FRONT_URL}/login`);
+
+      })
       .catch((error) => {
         helpers.response(res, "failed change status", null, 401);
       });
