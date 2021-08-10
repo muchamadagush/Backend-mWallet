@@ -7,11 +7,32 @@ const history = async (req, res, next) => {
   try {
 
     const { userId } = req.params;
-    const response = await transactionModels.history(userId)
-    console.log(userId)
-    if (response) {
+
+    const { perPage } = req.query;
+    const page = req.query.page || 1;
+
+    const order = req.query.orderBy || "title";
+    const sort = req.query.sortBy || "ASC";
+    const search = req.query.search || "";
+
+    const limit = perPage || 15;
+    const offset = (page - 1) * limit;
+
+    const response = await transactionModels.history(userId, search)
+
+    const resPagination = await transactionModels.history(userId, search, limit, offset, order, sort, search)
+
+    const allData = response.length
+    const totalPage = Math.ceil(allData / limit);
+    if (resPagination) {
       res.status(200);
       res.json({
+        meta: {
+          allData,
+          page,
+          perPage: limit,
+          totalPage,
+        },
         data: response,
       });
     } else {
@@ -89,9 +110,9 @@ const detailTransaction = async (req, res, next) => {
 
     if (response.length) {
       res.status(200)
-       res.json({
-         data: response
-       });
+      res.json({
+        data: response
+      });
     } else {
       res.status(404).send({ message: "Data not found" });
     }
@@ -110,7 +131,7 @@ const topup = async (req, res, next) => {
 
     // update amount user + amount topup
   } catch (error) {
-    next(new Error(error.message))    
+    next(new Error(error.message))
   }
 }
 
