@@ -42,6 +42,7 @@ const register = async (req, res, next) => {
             { expiresIn: "2h" },
             function (err, token) {
               common.sendEmailActivation(data.email, data.username, token);
+              helpers.response(res, "success register", data, 201);
             }
           );
           
