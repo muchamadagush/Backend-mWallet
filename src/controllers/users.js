@@ -77,11 +77,8 @@ exports.getUsersById = (req, res) => {
         return;
       }
 
-      if (result.length === 1) {
-        delete result[0].password;
-        helper.responseSuccess(res, 200, "One user found", result);
-        return
-      }
+      delete result[0].password;
+      helper.responseSuccess(res, 200, "One user found", result);
     })
     .catch((err) => {
       helper.responseError(res, 500, err.message);
