@@ -6,13 +6,11 @@ exports.getAllUsers = (page, perPage, search, sortBy, order) => {
       "SELECT COUNT(*) AS totalData FROM users WHERE username LIKE ? OR phone LIKE ?",
       [`%${search}%`, `%${search}%`],
       (err, result) => {
-        let totalData, page, perPage, totalPage;
+        let totalData, totalPage;
         if (err) {
           reject(err);
         } else {
           totalData = result[0].totalData;
-          page = parseInt(page) || 1;
-          perPage = parseInt(perPage) || 2;
           totalPage = Math.ceil(totalData / perPage);
         }
         const firstData = perPage * page - perPage;

@@ -34,10 +34,11 @@ const uploadImageHandler = async (req) => {
 };
 
 exports.getAllUsers = (req, res) => {
-  const { page, perPage } = req.query;
   const search = req.query.search || "";
   const sortBy = req.query.sortBy || "createdAt";
   const order = req.query.order || "ASC";
+  const perPage = parseInt(req.query.perPage) || 8;
+  const page = parseInt(req.query.page) || 1;
 
   usersModel
     .getAllUsers(page, perPage, search, sortBy, order)
