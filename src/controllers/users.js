@@ -71,12 +71,16 @@ exports.getUsersById = (req, res) => {
   usersModel
     .getUsersById(id)
     .then((result) => {
-      if (result < 1) {
+      if (result.length !== 1) {
         helper.responseError(res, 400, `User with id: ${id} is not found`);
         return;
       }
-      delete result[0].password;
-      helper.responseSuccess(res, 200, "One user found", result);
+
+      if (result.length === 1) {
+        delete result[0].password;
+        helper.responseSuccess(res, 200, "One user found", result);
+        return
+      }
     })
     .catch((err) => {
       helper.responseError(res, 500, err.message);
@@ -100,7 +104,7 @@ exports.deleteUsers = (req, res) => {
     });
 };
 
-exports.updatePhoneUsers =  (req, res) => {
+exports.updatePhoneUsers = (req, res) => {
   const id = req.params.id
   const { phone } = req.body
 
@@ -110,15 +114,15 @@ exports.updatePhoneUsers =  (req, res) => {
   }
 
   usersModel.updateUsers(id, data)
-  .then((result) => {
-    helper.responseSuccess(res, 200, "Successfully updated user's phone", result);
-  })
-  .catch((err) => {
-    if (err.message === "Internal server error") {
-      helper.responseError(res, 500, err.message);
-    }
-    helper.responseError(res, 400, err.message);
-  });
+    .then((result) => {
+      helper.responseSuccess(res, 200, "Successfully updated user's phone", result);
+    })
+    .catch((err) => {
+      if (err.message === "Internal server error") {
+        helper.responseError(res, 500, err.message);
+      }
+      helper.responseError(res, 400, err.message);
+    });
 }
 
 exports.updateAvatarUsers = async (req, res) => {
@@ -128,12 +132,12 @@ exports.updateAvatarUsers = async (req, res) => {
 
     if (!req.files) return res.status(400).send({ message: "File is required" })
     const avatar = await uploadImageHandler(req)
-    
+
     const data = {
       avatar: avatar.file_name,
       updatedAt: new Date()
     }
-  
+
     await usersModel.updateUsers(id, data)
 
     helper.responseSuccess(res, 200, "Successfully updated user's avatar");
@@ -151,7 +155,7 @@ exports.updatePasswordUsers = async (req, res, next) => {
     const { newPassword, password } = req.body
 
     const user = await authModels.findUser(email);
-    const { id } = user[0] 
+    const { id } = user[0]
 
     bcrypt.compare(password, user[0].password, function (err, resCompare) {
       if (!resCompare) {
@@ -164,7 +168,7 @@ exports.updatePasswordUsers = async (req, res, next) => {
           const data = {
             password: hash
           };
-    
+
           usersModel
             .updateUsers(id, data)
             .then(() => {
