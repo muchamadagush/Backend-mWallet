@@ -1,11 +1,23 @@
 const conn = require('../configs/db');
 
-const history = (userId, limit, offset, order, sort) => new Promise((resolve, reject) => {
-  conn.query(`SELECT * FROM transactions WHERE idUserTopup = ? OR idUserTransfer = ? AND status = 'success' ORDER BY ${order} ${sort} LIMIT ${limit} OFFSET ${offset}`, [userId, userId], (error, result) => {
+const allHistory = (userId) => new Promise((resolve, reject) => {
+  conn.query(`SELECT * FROM transactions WHERE idUserTopup = ? OR idUserTransfer = ?`, [userId, userId,], (error, result) => {
     if (!error) {
       resolve(result);
     } else {
       reject(error);
+    }
+  });
+});
+
+const history = (userId, limit, offset, order, sort) => new Promise((resolve, reject) => {
+  conn.query(`SELECT * FROM transactions WHERE idUserTopup = ? OR idUserTransfer = ? ORDER BY ? ? LIMIT ? OFFSET ?`, [userId, userId, order, sort, limit, offset], (error, result) => {
+    if (!error) {
+      resolve(result);
+      console.log(result)
+    } else {
+      reject(error);
+      console.log(error)
     }
   });
 });
@@ -31,6 +43,7 @@ const detailTransaction = (id) => new Promise((resolve, reject) => {
 })
 
 module.exports = {
+  allHistory,
   history,
   transaction,
   detailTransaction

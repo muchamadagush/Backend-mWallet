@@ -10,22 +10,37 @@ const x = new Xendit({
 
 const history = async (req, res, next) => {
   try {
-
     const { userId } = req.params;
 
-    const { perPage } = req.query;
-    const page = req.query.page || 1;
+    const perPage = req.query.perPage;
+    const page = parseInt(req.query.page) || 1;
 
     const order = req.query.orderBy || "updatedAt";
     const sort = req.query.sortBy || "DESC";
-    const search = req.query.search || "";
 
-    const limit = perPage || 8;
+    const limit = parseInt(perPage) || 8;
     const offset = (page - 1) * limit;
 
-    const response = await transactionModels.history(userId)
+    const response = await transactionModels.allHistory(userId)
 
     const resPagination = await transactionModels.history(userId, limit, offset, order, sort)
+
+    let resData = []
+    for (let i = 0; i < resPagination.length; i++) {
+      let data = ''
+      // for (let j = 0; j < resPagination[i].length; j++) {
+        if (resPagination[i].idUserTransfer === userId) {
+          resPagination[i].type = "Transfer"
+          data = resPagination[i]
+        } else {
+          resPagination[i].type = "Topup"
+          data = resPagination[i]
+        }
+      // }
+      console.log(data)
+      resData.push(data)
+    }
+    console.log(resData)
 
     const allData = response.length
     const totalPage = Math.ceil(allData / limit);
@@ -38,7 +53,7 @@ const history = async (req, res, next) => {
           perPage: limit,
           totalPage,
         },
-        data: resPagination,
+        data: resData,
       });
     } else {
       res.status(404);
