@@ -9,5 +9,6 @@ router
   .get('/:id', auth.verifyAccess, transactionRoutes.detailTransaction)
   .post('/addvirtualaccount', auth.verifyAccess, transactionRoutes.createVirtualAccount)
   .post('/topup', transactionRoutes.topup)
+  .get('/gevirtualaccount/:id', auth.verifyAccess, transactionRoutes.getVAUser)
 
 module.exports = router

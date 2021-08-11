@@ -20,7 +20,18 @@ const getDataById = (id) => new Promise((resolve, reject) => {
   })
 })
 
+const getDataByUserId = (userId) => new Promise((resolve, reject) => {
+  conn.query(`SELECT * FROM topups WHERE userId = ?`, userId, (error, result) => {
+    if (!error) {
+      resolve(result)
+    } else {
+      reject(error)
+    }
+  })
+})
+
 module.exports = {
   createVirtualAccount,
-  getDataById
+  getDataById,
+  getDataByUserId
 }

@@ -239,10 +239,26 @@ const topup = async (req, res, next) => {
   }
 }
 
+const getVAUser = async (req, res, next) => {
+  try {
+    const { userId } = req.params
+
+    const data = await topupModels.getDataByUserId(userId)
+
+    res.status(200)
+     res.json({
+       data: data
+     });
+  } catch (error) {
+    next(new Error(error.message))
+  }
+}
+
 module.exports = {
   history,
   transaction,
   detailTransaction,
   topup,
-  createVirtualAccount
+  createVirtualAccount,
+  getVAUser
 };
