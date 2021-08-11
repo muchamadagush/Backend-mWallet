@@ -1,7 +1,7 @@
 const conn = require('../configs/db');
 
-const history = (userId) => new Promise((resolve, reject) => {
-  conn.query(`SELECT * FROM transactions WHERE idUserTopup = ? OR idUserTransfer = ? AND status = 'success'`, [userId, userId], (error, result) => {
+const history = (userId, limit, offset, order, sort) => new Promise((resolve, reject) => {
+  conn.query(`SELECT * FROM transactions WHERE idUserTopup = ? OR idUserTransfer = ? AND status = 'success' ORDER BY ${order} ${sort} LIMIT ${limit} OFFSET ${offset}`, [userId, userId], (error, result) => {
     if (!error) {
       resolve(result);
     } else {

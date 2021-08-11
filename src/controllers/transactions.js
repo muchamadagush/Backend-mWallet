@@ -23,9 +23,9 @@ const history = async (req, res, next) => {
     const limit = perPage || 8;
     const offset = (page - 1) * limit;
 
-    const response = await transactionModels.history(userId, search)
+    const response = await transactionModels.history(userId)
 
-    const resPagination = await transactionModels.history(userId, search, limit, offset, order, sort, search)
+    const resPagination = await transactionModels.history(userId, limit, offset, order, sort)
 
     const allData = response.length
     const totalPage = Math.ceil(allData / limit);
