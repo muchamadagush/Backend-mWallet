@@ -38,7 +38,7 @@ const history = async (req, res, next) => {
           perPage: limit,
           totalPage,
         },
-        data: response,
+        data: resPagination,
       });
     } else {
       res.status(404);
