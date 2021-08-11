@@ -83,6 +83,8 @@ const activation = (req, res, next) => {
 const login = async (req, res, next) => {
   const { email, password } = req.body;
   const result = await userModels.findUser(email);
+  if (result.length === 0) return res.status(404).send({ message: "cannot find user" })
+  
   const user = result[0];
   const status = user.status;
  
