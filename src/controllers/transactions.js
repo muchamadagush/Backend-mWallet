@@ -29,14 +29,15 @@ const history = async (req, res, next) => {
     for (let i = 0; i < resPagination.length; i++) {
       let data = ''
       if (resPagination[i].idUserTransfer === userId) {
-        const userTopup = await userModels.getUsersById(resPagination[i].idUserTransfer)
+        const userTopup = await userModels.getUsersById(resPagination[i].idUserTopup)
         resPagination[i].type = "Transfer"
+        resPagination[i].avatar = userTopup[0].avatar
         resPagination[i].username = userTopup[0].username
         data = resPagination[i]
       } else {
-        const userTransfer = await userModels.getUsersById(resPagination[i].idUserTopup)
-        console.log(userTransfer)
+        const userTransfer = await userModels.getUsersById(resPagination[i].idUserTransfer)
         resPagination[i].type = "Topup"
+        resPagination[i].avatar = userTransfer[0].avatar
         resPagination[i].username = userTransfer[0].username
         data = resPagination[i]
       }
