@@ -28,16 +28,18 @@ const history = async (req, res, next) => {
     let resData = []
     for (let i = 0; i < resPagination.length; i++) {
       let data = ''
-      // for (let j = 0; j < resPagination[i].length; j++) {
-        if (resPagination[i].idUserTransfer === userId) {
-          resPagination[i].type = "Transfer"
-          data = resPagination[i]
-        } else {
-          resPagination[i].type = "Topup"
-          data = resPagination[i]
-        }
-      // }
-      console.log(data)
+      if (resPagination[i].idUserTransfer === userId) {
+        const userTopup = await userModels.getUsersById(resPagination[i].idUserTransfer)
+        resPagination[i].type = "Transfer"
+        resPagination[i].username = userTopup[0].username
+        data = resPagination[i]
+      } else {
+        const userTransfer = await userModels.getUsersById(resPagination[i].idUserTopup)
+        console.log(userTransfer)
+        resPagination[i].type = "Topup"
+        resPagination[i].username = userTransfer[0].username
+        data = resPagination[i]
+      }
       resData.push(data)
     }
     console.log(resData)
