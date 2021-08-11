@@ -16,11 +16,11 @@ const history = async (req, res, next) => {
     const { perPage } = req.query;
     const page = req.query.page || 1;
 
-    const order = req.query.orderBy || "title";
-    const sort = req.query.sortBy || "ASC";
+    const order = req.query.orderBy || "updatedAt";
+    const sort = req.query.sortBy || "DESC";
     const search = req.query.search || "";
 
-    const limit = perPage || 15;
+    const limit = perPage || 8;
     const offset = (page - 1) * limit;
 
     const response = await transactionModels.history(userId, search)
