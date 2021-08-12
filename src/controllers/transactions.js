@@ -43,7 +43,6 @@ const history = async (req, res, next) => {
       }
       resData.push(data)
     }
-    console.log(resData)
 
     const allData = response.length
     const totalPage = Math.ceil(allData / limit);
@@ -65,7 +64,6 @@ const history = async (req, res, next) => {
       });
     }
   } catch (error) {
-    console.log(error.response)
     next(new Error(error.response));
   }
 };
@@ -254,11 +252,75 @@ const getVAUser = async (req, res, next) => {
   }
 }
 
+const getAllTransactions = async (req, res, next) => {
+  try {
+    const perPage = req.query.perPage;
+    const page = parseInt(req.query.page) || 1;
+
+    const order = req.query.orderBy || "updatedAt";
+    const sort = req.query.sortBy || "DESC";
+
+    const limit = parseInt(perPage) || 8;
+    const offset = (page - 1) * limit;
+
+    const response = await transactionModels.dataAllTransactions(order, sort)
+
+    const resPagination = await transactionModels.getAllTransactions(limit, offset, order, sort)
+
+    let data = []
+    for (let i = 0; i < resPagination.length; i++) {
+      const user = await userModels.getUsersById(resPagination[i].idUserTopup)
+      resPagination[i].username = user[0].username
+
+      const fullyear = (resPagination[i].updatedAt).toISOString().slice(0, 10)
+      const time = (resPagination[i].updatedAt).toISOString().slice(11, 16)
+      resPagination[i].updatedAt = fullyear + ' ' + time
+      
+      const userTransfer = await userModels.getUsersById(resPagination[i].idUserTransfer)
+      resPagination[i].avatar = userTransfer[0].avatar
+      resPagination[i].usernameTransfer = userTransfer[0].username
+
+      data.push(resPagination[i])
+    }
+
+    let allAmount = []
+    for (let i = 0; i < response.length; i++) {
+      allAmount.push(response[i].amount)
+    }
+
+    let sum = allAmount.reduce((total, next) => {return total + next})
+
+    const allData = response.length
+    const totalPage = Math.ceil(allData / limit);
+    if (resPagination) {
+      res.status(200);
+      res.json({
+        meta: {
+          allData,
+          page,
+          perPage: limit,
+          totalPage,
+          totalAmount: sum
+        },
+        data: data,
+      });
+    } else {
+      res.status(lastDate);
+      res.json({
+        message: "No data found",
+      });
+    }
+  } catch (error) {
+    next(new Error(error.response));
+  }
+};
+
 module.exports = {
   history,
   transaction,
   detailTransaction,
   topup,
   createVirtualAccount,
-  getVAUser
+  getVAUser,
+  getAllTransactions
 };

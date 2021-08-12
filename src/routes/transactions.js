@@ -4,10 +4,11 @@ const transactionRoutes = require('../controllers/transactions.js')
 const auth = require('../middlewares/auth')
 
 router
+  .get('/', auth.verifyAccess, transactionRoutes.getAllTransactions)
   .post('/', auth.verifyAccess, transactionRoutes.transaction)
-  .get('/history/:userId', auth.verifyAccess, transactionRoutes.history)
   .get('/:id', auth.verifyAccess, transactionRoutes.detailTransaction)
-  .post('/addvirtualaccount', auth.verifyAccess, transactionRoutes.createVirtualAccount)
+  .get('/history/:userId', auth.verifyAccess, transactionRoutes.history)
+  .post('/addvirtualaccount', transactionRoutes.createVirtualAccount)
   .post('/topup', transactionRoutes.topup)
   .get('/va/:userId', auth.verifyAccess, transactionRoutes.getVAUser)
 

@@ -42,9 +42,31 @@ const detailTransaction = (id) => new Promise((resolve, reject) => {
   })
 })
 
+const dataAllTransactions = (order, sort) => new Promise((resolve, reject) => {
+  conn.query(`SELECT * FROM transactions WHERE status = "success" ORDER BY ${order}  ${sort}`, (error, result) => {
+    if (!error) {
+      resolve(result);
+    } else {
+      reject(error);
+    }
+  });
+});
+
+const getAllTransactions = (limit, offset, order, sort) => new Promise((resolve, reject) => {
+  conn.query(`SELECT * FROM transactions WHERE status = "success" ORDER BY ? ? LIMIT ? OFFSET ?`, [order, sort, limit, offset], (error, result) => {
+    if (!error) {
+      resolve(result);
+    } else {
+      reject(error);
+    }
+  });
+});
+
 module.exports = {
   allHistory,
   history,
   transaction,
-  detailTransaction
+  detailTransaction,
+  getAllTransactions,
+  dataAllTransactions
 };
