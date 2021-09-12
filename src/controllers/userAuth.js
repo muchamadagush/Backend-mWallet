@@ -26,7 +26,7 @@ const register = async (req, res, next) => {
         email: email,
         password: hash,
         role: "MEMBER",
-        amount: 0,
+        amount: 10000,
         status: "UNACTIVED",
         createdAt: new Date(),
         updatedAt: new Date()
@@ -132,7 +132,7 @@ const setPin = async (req, res, next) => {
 
 const forgotPassword =  (req, res, next) => {
   const  {email} = req.body;
-   userModels
+    userModels
      .findUser(email)
      .then((result) => {
          const user = result[0];
@@ -149,7 +149,7 @@ const forgotPassword =  (req, res, next) => {
       
      })
      .catch((error) => {
-       helpers.response(res, "failed forgot password", null, 401);
+       helpers.response(res, "email not registered!", null, 401);
      });
 }
 

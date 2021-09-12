@@ -5,7 +5,7 @@ const topupModels = require("../models/topup")
 const { v4: uuid } = require("uuid");
 const Xendit = require('xendit-node');
 const x = new Xendit({
-  secretKey: 'xnd_development_GomfrGhMBtwHIglXqNyFgmzzlc2X0eZkFuePKNegd1OkAbRiK7PbW56B384vNU2',
+  secretKey: 'xnd_development_CYUIcOoXTDgcOET6pMfzbCmCtgRL2VbmxHHllMbIWoxHASivPABvfpwyFVYtVS',
 });
 
 const history = async (req, res, next) => {
