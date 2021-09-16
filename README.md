@@ -23,6 +23,7 @@
 * [About the Project](#about-the-project)
   * [Built With](#built-with)
 * [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
   * [Installation](#installation)
 * [Related Project](#related-project)
 * [Zwallet API Documentation](#zwallet-api-documentation)
@@ -48,6 +49,12 @@ Zwallet is a digital wallet apps that will really helps you to manage your e-mon
 
 <!-- GETTING STARTED -->
 ## Getting Started
+
+### Installation
+* [NodeJs](https://nodejs.org/)
+* [MySQL](https://www.mysql.com/)
+* [Postman](https://www.postman.com/)
+
 ### Installation
 
 1. Clone the repo
