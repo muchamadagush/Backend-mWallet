@@ -7,9 +7,6 @@
 
   <p align="center">
     <br />
-    <a href="https://github.com/AdmiralYuuShi/Frontend-HiringChannelApp-WithRedux"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
     <a href="https://zwallet-matrix.vercel.app/">View Demo</a>
     ·
     <a href="https://github.com/19damah23/Backend-mWallet/issues">Report Bug</a>
@@ -27,8 +24,9 @@
   * [Built With](#built-with)
 * [Getting Started](#getting-started)
   * [Installation](#installation)
-* [Screenshots](#screenshots)
-* [Contact](#contact)
+* [Related Project](#related-project)
+* [Zwallet API Documentation](#zwallet-api-documentation)
+* [Contributors](#contributors)
 
 
 
@@ -84,8 +82,6 @@ FRONT_URL = [FRONTEND_URL]
 ```sh
 npm run dev
 ```
-6. Testing with Postman
-    * [Zwallet API Documentation](https://documenter.getpostman.com/view/13709692/Tzz4RfES#acbbeee4-4be5-4a99-8185-24f2c3ea10c6)
 
 ### Related Project
 * [`Frontend-Zwallet`](https://github.com/19damah23/zwallet)
@@ -111,6 +107,13 @@ npm run dev
         <a href="https://github.com/19damah23">
           <img width="100" src="https://media-exp1.licdn.com/dms/image/C5603AQG98I3VT9Wc5g/profile-displayphoto-shrink_800_800/0/1630549889980?e=1637193600&v=beta&t=EL-sEsGitFv9TeZofjNhs7fVZa0RxLSwxhyqhF3Xt8A" alt="Muchamad Agus Hermawan"><br/>
           <sub><b>Muchamad Agus Hermawan</b></sub> <br/>
+          <sub>Back End Developer</sub>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://github.com/CandaMuammal">
+          <img width="100" src="https://avatars.githubusercontent.com/u/79079927?v=4" alt="Canda Muammal"><br/>
+          <sub><b>Canda Muammal</b></sub> <br/>
           <sub>Back End Developer</sub>
         </a>
       </td>
