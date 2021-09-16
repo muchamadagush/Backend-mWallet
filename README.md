@@ -50,7 +50,7 @@ Zwallet is a digital wallet apps that will really helps you to manage your e-mon
 <!-- GETTING STARTED -->
 ## Getting Started
 
-### Installation
+### Prerequisites
 * [NodeJs](https://nodejs.org/)
 * [MySQL](https://www.mysql.com/)
 * [Postman](https://www.postman.com/)
